@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--映射文件，namespace命名空间：对应一个完全的全限定名，必须和对应的接口的路径相匹配-->
+<mapper namespace="com.fc.dao.StudentDao">
+    <!--这是一个select语句的标签，id必须和对应接口中的方法名完全相同，但是必须唯一。resultType对应返回值的类型，也就是orm映射的O
+    ，必须使用完全的全限定名-->
+    <!--通过id查找学生-->
+   <select id="findById" parameterType="Integer" resultType="com.fc.entity.Student">
+       select * from student where id = #{id}
+   </select>
+
+   <!--插入学生-->
+    <insert id="insert">
+        insert into student (name,age,gender,info) values (#{name},#{age},#{gender},#{info})
+    </insert>
+
+</mapper>
