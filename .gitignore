@@ -1,0 +1,11 @@
+# Project exclude paths
+/01-ThirdLayerApplication-01-Web/target/
+/02-MyBatis-01-Start/target/
+/02-MyBatis-02-More-Mapper/target/
+/02-MyBatis-03-Character/target/
+/02-MyBatis-04-Placeholder/target/
+/02-MyBatis-05-Properties/target/
+/02-MyBatis-06-Alias/target/
+/02-MyBatis-07-Log/target/
+/02-MyBatis-08-Bind/target/
+/02-MyBatis-09-CRUD/target/

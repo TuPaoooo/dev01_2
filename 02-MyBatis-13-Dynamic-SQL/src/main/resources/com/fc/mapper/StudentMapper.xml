@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--映射文件，namespace命名空间：对应一个完全的全限定名，必须和对应的接口的路径相匹配-->
+<mapper namespace="com.fc.dao.StudentDao">
+    <!--声明一个可复用的sql片段-->
+    <sql id="field">
+        id,name,age,gender,info
+    </sql>
+
+<!--查找所有学生-->
+    <select id="findAll" resultType="com.fc.entity.Student">
+        select <include refid="field"/> from student
+    </select>
+
+<!--通过id查找学生-->
+    <select id="findById" resultType="com.fc.entity.Student">
+        select <include refid="field"/> from student
+        where id = #{id}
+    </select>
+
+<!--模糊查询-->
+<select id="findByKeyword" resultType="com.fc.entity.Student">
+    select <include refid="field"/> from student
+    where 1=1
+    <if test="name!=null">
+        and name like #{name}
+    </if>
+
+    <if test="info!=null">
+        and info like #{info}
+    </if>
+</select>
+
+    <!--where标签能够自动去除多余的and和or-->
+    <!--通过条件查询学生-->
+    <select id="findByStudent" resultType="com.fc.entity.Student">
+        select <include refid="field"/> from student
+        <where>
+            <if test="id != null">
+                or id = #{id}
+            </if>
+
+            <if test="name != null">
+                or name = #{name}
+            </if>
+
+            <if test="age != null">
+                or age = #{age}
+            </if>
+
+            <if test="gender != null">
+                or gender = #{gender}
+            </if>
+
+            <if test="info != null">
+                or info = #{info}
+            </if>
+        </where>
+    </select>
+
+    <!--trim可以声明指定的前后缀以及忽略指定的前后缀-->
+   <select id="findByStudentOnTrim" resultType="com.fc.entity.Student">
+       select <include refid="field"/> from student
+        <trim prefix="where" prefixOverrides="or">
+            <if test="id != null">
+                or id = #{id}
+            </if>
+
+            <if test="name != null">
+                or name = #{name}
+            </if>
+
+            <if test="age != null">
+                or age = #{age}
+            </if>
+
+            <if test="gender != null">
+                or gender = #{gender}
+            </if>
+
+            <if test="info != null">
+                or info = #{info}
+            </if>
+
+        </trim>
+
+   </select>
+
+<!--通过set标签和if标签修改学生表 if里面不用加and-->
+    <update id="update">
+        update student
+
+        <set>
+            <if test="name != null">
+                 name = #{name}
+            </if>
+
+            <if test="age != null">
+             age = #{age}
+            </if>
+
+            <if test="gender != null">
+                 gender = #{gender}
+            </if>
+
+            <if test="info != null">
+                 info = #{info}
+            </if>
+
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过trim标签和if标签修改学生表 trim里面设置前缀和后缀-->
+    <update id="updateOnTrim">
+        update student
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name != null">
+                name = #{name}
+            </if>
+
+            <if test="age != null">
+                age = #{age}
+            </if>
+
+            <if test="gender != null">
+                gender = #{gender}
+            </if>
+
+            <if test="info != null">
+                info = #{info}
+            </if>
+        </trim>
+    where id = #{id}
+    </update>
+
+    <!--删除指定区间的学生-->
+    <delete id="delete">
+        delete from student where id in
+        <foreach collection="array" separator="," open="(" close=")" index="i" item="id">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
