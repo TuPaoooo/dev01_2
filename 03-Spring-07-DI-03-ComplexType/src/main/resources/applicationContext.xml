@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="dog" class="com.fc.entity.Dog">
+        <property name="breed" value="边牧"/>
+        <property name="color" value="黑白相间"/>
+    </bean>
+
+    <bean id="complexType" class="com.fc.entity.ComplexType">
+        <property name="objects">
+            <array>
+                <value>1</value>
+                <value>jjj</value>
+                <value>true</value>
+                <value>89898</value>
+            </array>
+        </property>
+
+        <property name="list">
+            <list>
+                <value>2348</value>
+                <value>47356</value>
+                <value>84839</value>
+                <value>1928</value>
+            </list>
+        </property>
+
+        <property name="map">
+            <map>
+                <entry key="ty" value="你爱我"/>
+                <entry key="yk" value="我爱你"/>
+
+            </map>
+        </property>
+    </bean>
+</beans>

@@ -3,5 +3,5 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
                         <!--映射不同的impl就会自动创建不同的对象-->
-    <bean id="UserDao" class="com.fc.dao.impl.UserDaoOracleImpl"/>
+    <bean id="UserDao" class="com.fc.com.fc.dao.impl.UserDaoOracleImpl"/>
 </beans>

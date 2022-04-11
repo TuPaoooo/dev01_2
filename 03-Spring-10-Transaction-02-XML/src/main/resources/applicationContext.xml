@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.2.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.2.xsd ">
+
+    <!--可以用来加载指定路径下的配置文件-->
+    <context:property-placeholder location="jdbc.properties"/>
+
+    <!--配置Druid数据源-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!--配置平台事务管理器-->
+    <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+   <!-- &lt;!&ndash;配置事务&ndash;&gt;
+    <tx:advice id="advice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="transfer" propagation="REQUIRED" isolation="DEFAULT" read-only="false"/>
+        </tx:attributes>
+    </tx:advice>-->
+
+    <!--&lt;!&ndash;AOP配置&ndash;&gt;
+    <aop:config proxy-target-class="true">
+        &lt;!&ndash;切点&ndash;&gt;
+        <aop:pointcut id="pointcut" expression="execution(* com.fc.service.impl.StatementServiceImpl.transfer(..))"/>
+        &lt;!&ndash;配置切面&ndash;&gt;
+        <aop:advisor advice-ref="advice" pointcut-ref="pointcut"/>
+    </aop:config>-->
+
+    <!--注入AtmDao-->
+    <bean id="atmDao" class="com.fc.dao.impl.AtmDaoImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="atmService" class="com.fc.service.impl.AtmServiceImpl">
+        <property name="atmDao" ref="atmDao"/>
+    </bean>
+
+    <bean id="statementService" class="com.fc.service.impl.StatementServiceImpl">
+        <property name="atmDao" ref="atmDao"/>
+    </bean>
+
+
+
+
+</beans>
