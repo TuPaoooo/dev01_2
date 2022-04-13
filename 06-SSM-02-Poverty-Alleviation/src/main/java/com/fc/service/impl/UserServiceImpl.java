@@ -60,6 +60,11 @@ public class UserServiceImpl implements UserService {
         if (user.getCreateTime() == null) {
             user.setCreateTime(new Date());
         }
+        if(user.getPhoto()==null){
+            user.setPhoto("https://tse4-mm.cn.bing.net/th/id/OIP-C.nQbX4992Y7diUq0T-LETNAHaHa?w=185&h=185&c=7&r=0&o=5&dpr=1.5&pid=1.7");
+        }
+
+
         //设置一下主键回填
         int affectedRows = userMapper.insertSelective(user);
 
