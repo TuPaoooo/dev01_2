@@ -2,6 +2,7 @@ package com.fc.service.impl;
 
 import com.fc.dao.UserMapper;
 import com.fc.entity.User;
+import com.fc.entity.UserExample;
 import com.fc.service.UserService;
 import com.fc.vo.DataVO;
 import com.fc.vo.ResultVO;
@@ -21,21 +22,37 @@ public class UserServiceImpl implements UserService {
 
     //如果传id就查询单个，不传id就查询全部
     @Override
-    public ResultVO getList(Integer pageNum, Integer pageSize, Long id) {
+    public ResultVO getList(Integer pageNum, Integer pageSize, User param) {
         List<User> users;
 
         ResultVO resultVO;
         try {
-            if (id != null) {
+            if (param.getId() != null) {
                 //单个学生
-                User user = userMapper.selectByPrimaryKey(id);
+                User user = userMapper.selectByPrimaryKey(param.getId());
                 users = new ArrayList<>();
                 users.add(user);
             } else {
                 //开启分页
                 PageHelper.startPage(pageNum, pageSize);
 
-                users = userMapper.selectByExample(null);
+                UserExample userExample = new UserExample();
+
+                UserExample.Criteria criteria = userExample.createCriteria();
+
+                if(param.getUsername()!=null){
+                    criteria.andNameLike("%"+param.getName()+"%");
+                }
+
+                if(param.getUsername()!=null){
+                    criteria.andUsernameLike("%"+param.getUsername()+"%");
+                }
+
+                if(param.getGender()!=null){
+                    criteria.andGenderEqualTo(param.getGender());
+                }
+
+                users=userMapper.selectByExample(userExample);
             }
 
             //分页信息
