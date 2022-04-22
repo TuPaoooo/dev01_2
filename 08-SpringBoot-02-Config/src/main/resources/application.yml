@@ -1,0 +1,18 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /yml
+#注解注入
+student:
+  name: "周星驰"
+  age: 20
+  gender: '男'
+  birthday: 2000/09/09
+  car:
+    brand: byd
+    color: red
+
+#配置类注入
+person:
+  username: oo;
+  password: 123;
