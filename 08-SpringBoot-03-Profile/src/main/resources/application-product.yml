@@ -5,5 +5,5 @@ server:
     context-path: /product
 
 person:
-  name: "黑太狼"
+  name: "黑太郎"
   age: -1

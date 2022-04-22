@@ -1,6 +1,6 @@
 # 测试环境
 server:
-  port: 8848
+  port: 8890
   servlet:
     context-path: /test
 

@@ -13,7 +13,7 @@ public class StudentController {
     private Integer age;
 
     @RequestMapping("get")
-    public String get() {
-        return name + "：" + age;
+    public String get(){
+        return name + ":" + age;
     }
 }

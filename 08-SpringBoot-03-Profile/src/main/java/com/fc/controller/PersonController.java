@@ -11,7 +11,7 @@ public class PersonController {
     private Person person;
 
     @RequestMapping("getPerson")
-    public Person getPerson() {
+    public Person getPerson(){
         return person;
     }
 }
