@@ -1,0 +1,4 @@
+spring:
+  messages:
+    encoding: utf-8
+    basename: static/i18n/messages

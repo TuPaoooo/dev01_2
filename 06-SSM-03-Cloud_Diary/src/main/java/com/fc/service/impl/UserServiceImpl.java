@@ -2,44 +2,37 @@ package com.fc.service.impl;
 
 import com.fc.dao.TbUserMapper;
 import com.fc.entity.TbUser;
+import com.fc.entity.TbUserExample;
 import com.fc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
     private TbUserMapper tbUserMapper;
 
+    //登录
     @Override
-    public Boolean login(TbUser user) {
-        TbUser selectUser = tbUserMapper.selectUser(user.getUsername(), user.getPassword());
+    public ModelAndView login(HttpServletRequest req, HttpServletResponse resp) {
+        TbUserExample tbUserExample = new TbUserExample();
+        TbUserExample.Criteria criteria = tbUserExample.createCriteria();
+        //使用username和password进行登录，查询数据库
+        criteria.andUsernameEqualTo(req.getParameter("username"));
+        criteria.andPasswordEqualTo(req.getParameter("password"));
+        List<TbUser> tbUsers = tbUserMapper.selectByExample(tbUserExample);
 
-        if(selectUser!=null){
-            return true;
-        }else {
-            return false;
-        }
+        ModelAndView mv = new ModelAndView();
+
+
+        return null;
     }
 
-    //登录
-//    @Override
-//    public Boolean login(String username, String password) {
-//        ResultVO resultVO = null;
-//
-//        if(username==null||password==null){
-//            resultVO.setCode(0);
-//            resultVO.setMessage("用户名或密码不可为空");
-//            return resultVO;
-//        }
-//
-//        TbUser user = tbUserMapper.selectUser(username, password);
-//
-//        if(user!=null){
-//
-//
-//        }
-//        return null;
-//    }
+
 
 }

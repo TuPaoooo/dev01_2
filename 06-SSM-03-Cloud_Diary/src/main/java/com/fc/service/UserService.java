@@ -1,9 +1,15 @@
 package com.fc.service;
 
-import com.fc.entity.TbUser;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public interface UserService {
-
     //登录
-    Boolean login(TbUser user);
+    ModelAndView login(HttpServletRequest req, HttpServletResponse resp);
+
+
+
+
 }
