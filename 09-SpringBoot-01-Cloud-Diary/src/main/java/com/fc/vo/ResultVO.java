@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResultVo {
+public class ResultVO {
     private Integer code;
     private String message;
     private Boolean success;

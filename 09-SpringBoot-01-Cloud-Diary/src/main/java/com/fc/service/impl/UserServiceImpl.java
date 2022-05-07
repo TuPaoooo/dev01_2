@@ -4,16 +4,11 @@ import com.fc.dao.TbUserMapper;
 import com.fc.entity.TbUser;
 import com.fc.entity.TbUserExample;
 import com.fc.service.UserService;
-import com.fc.vo.ResultVo;
+import com.fc.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -25,114 +20,93 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private TbUserMapper tbUserDao;
 
-    //登录
     @Override
-    public ResultVo login(String username, String password) {
-        ResultVo resultVo;
+    public ResultVO login(String username, String password) {
+        ResultVO resultVO;
 
         TbUserExample example = new TbUserExample();
 
         TbUserExample.Criteria criteria = example.createCriteria();
+
         criteria.andUsernameEqualTo(username);
         criteria.andPasswordEqualTo(password);
 
         List<TbUser> users = tbUserDao.selectByExample(example);
 
         if (users.size() > 0) {
-            resultVo = new ResultVo(200, "登陆成功", true, users.get(0));
+            // 成功
+            resultVO = new ResultVO(200, "登录成功", true, users.get(0));
         } else {
-            resultVo = new ResultVo(0, "登陆失败,用户名或密码错误", false, null);
+            // 失败
+            resultVO = new ResultVO(0, "登录失败，用户名或密码错误", false, null);
         }
 
-        return resultVo;
+        return resultVO;
     }
 
-    //退出登录
     @Override
-    public ModelAndView logout(HttpSession session, HttpServletResponse response, HttpServletRequest request, ModelAndView mv) {
-        //销毁Session对象
-        session = request.getSession(false);
-        session.removeAttribute("user");
-        session.removeAttribute("dataInfo");
-        session.removeAttribute("typeInfo");
+    public Integer checkNick(String nick) {
+        TbUserExample tbUserExample = new TbUserExample();
 
-        //清空Cookie对象过期时间
-        Cookie cookie = new Cookie("JSESSIONID", "");
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
+        TbUserExample.Criteria criteria = tbUserExample.createCriteria();
 
-        //重定向跳转到login.jsp登录页面
-        mv.setViewName("redirect:/login.jsp");
-        return mv;
+        criteria.andNickEqualTo(nick);
+
+        List<TbUser> users = tbUserDao.selectByExample(tbUserExample);
+
+        return users.size();
     }
 
-    //进入个人中心
     @Override
-    public ModelAndView userCenter(HttpServletRequest request,
-                                   HttpServletResponse response,
-                                   ModelAndView mv) {
+    public ResultVO update(MultipartFile img, TbUser user) {
+        ResultVO resultVO = new ResultVO();
 
-        //设置请求域对象menu_page的值为user
-        mv.addObject("menu_page", "user");
-        //设置请求域对象changePage的值为user目录下的info.jsp
-        mv.addObject("changePage", "user/info.jsp");
+        if (img != null && !img.isEmpty()) {
+            String path = "F:\\IdeaWorkSpace\\dev01\\09-SpringBoot-01-Cloud-Diary\\target\\classes\\META-INF\\resources\\upload";
 
-        //转发至index.jsp页面
-        mv.setViewName("redirect:/index.jsp");
-
-        return mv;
-    }
-
-    //修改用户信息
-    @Override
-    public ModelAndView update(MultipartFile img, HttpServletRequest request, TbUser user) {
-
-        HttpSession session = request.getSession();
-
-        if (img.getSize() > 0) {
-            String path = "D:\\idea_code\\dev01_2\\09-SpringBoot-01-Cloud-Diary\\src\\main\\resources\\META-INF\\resources\\upload";
-
-            File file = new File(path);
-
+            // 获取文件名
             String filename = img.getOriginalFilename();
 
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSS");
+            File pathFile = new File(path);
 
-            String formatDate = formatter.format(new Date());
+            String suffix = filename.substring(filename.lastIndexOf('.'));
 
-            String suffix = null;
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
-            if (filename != null) {
-                suffix = filename.substring(filename.lastIndexOf("."));
-            }
+            String prefix = formatter.format(new Date());
 
-            filename = formatDate + suffix;
+            filename = prefix + suffix;
 
             try {
-                img.transferTo(new File(file, filename));
+                img.transferTo(new File(pathFile, filename));
 
+                // 如果上传成功，一定要把user中的头像给重新设置一下
                 user.setHead(filename);
             } catch (IOException e) {
                 e.printStackTrace();
-            }
 
+                resultVO.setCode(0);
+                resultVO.setSuccess(false);
+                resultVO.setMessage("头像上传失败");
+                return resultVO;
+            }
         }
 
-        //更新
-        tbUserDao.updateByPrimaryKeySelective(user);
+        int affectedRows = tbUserDao.updateByPrimaryKeySelective(user);
 
-        //根据id获取用户
-        TbUser tbUser = tbUserDao.selectByPrimaryKey(user.getId());
+        if (affectedRows > 0) {
+            resultVO.setCode(1);
+            resultVO.setMessage("更新个人信息成功！");
 
-        session.setAttribute("user", tbUser);
+            user = tbUserDao.selectByPrimaryKey(user.getId());
 
-        //转发执行user/userCenter接口
-        ModelAndView mv = new ModelAndView("redirect:/user/userCenter");
+            resultVO.setData(user);
+        } else {
+            resultVO.setMessage("头像上传成功，但是修改失败");
+            resultVO.setCode(0);
+            resultVO.setSuccess(false);
+        }
 
-        return mv;
+        return resultVO;
     }
-
-
-
-
 }
