@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>测试三目运算符</title>
+</head>
+<body>
+<!--三目（三元）：有三个操作数参与运算-->
+<p th:text="${name} eq 'pp' ? '我是pp':'我是qq'"></p>
+<p th:text="${name} eq 'pp' ? (${age} gt 20 ? '老了' : '年轻') : '我是qq'"></p>
+
+<!--jstl中的if判断是差不多的-->
+<p th:text="${gender} ? '男' : '女'"></p>
+<p th:text="${!gender} ? '男' : '女'"></p>
+
+<!--一元运算符：自增、自减、取反-->
+a++
+a--
+!a
+
+</body>
+</html>
